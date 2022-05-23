@@ -1,0 +1,112 @@
+html,
+body,
+.intro {
+  height: 100%;
+}
+
+@media (min-width: 560px) and (max-width: 750px) {
+  html,
+  body,
+  .intro {
+    height: 830px;
+  }
+}
+
+@media (min-width: 800px) and (max-width: 850px) {
+  html,
+  body,
+  .intro {
+    height: 830px;
+  }
+}
+
+.gradient-custom {
+  /* fallback for old browsers */
+  background: #667eea;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to bottom, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1));
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to bottom, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1))
+}
+
+/* Header starts */
+
+.header-container{
+  height: 155px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 100;
+
+  background-color: lightcoral;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(222, 222, 222);
+}
+
+.title-logo-container {
+  background-color: lightcoral;
+  display: flex;
+  align-items: center;
+  margin-left: 25px;
+}
+
+.taar-logo {
+  /* display: flex; */
+  align-items: center;
+}
+.taar-text {
+  /* display: flex; */
+  align-items: center;
+  margin-left: 17px;
+  font-size: 56px;
+  font-family: Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: rgb(65, 60, 60)
+}
+
+/* .login-text-container {
+  display: flex;
+  position: relative;
+  align-items: center;
+  background-color: lightskyblue;
+  height: 80px;
+  width: 100px;
+  top: 37px;
+  right: 950px;
+  left: auto;
+} */
+/* Header ends */
+
+/* footer starts */
+
+.footer-container {
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 100;
+
+  background-color: lightcoral;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(222, 222, 222);
+}
+
+.right-text {
+  display: flex;
+  align-items: center;
+}
+
+/* footer ends */

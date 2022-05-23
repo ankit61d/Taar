@@ -1,0 +1,76 @@
+/* Header starts */
+
+.header-container{
+  height: 155px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 100;
+
+  background-color: lightcoral;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(222, 222, 222);
+}
+
+.title-logo-container {
+  background-color: lightcoral;
+  display: flex;
+  align-items: center;
+  margin-left: 25px;
+}
+
+.taar-logo {
+  /* display: flex; */
+  align-items: center;
+}
+.taar-text {
+  /* display: flex; */
+  align-items: center;
+  margin-left: 17px;
+  font-size: 56px;
+  font-family: Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: rgb(65, 60, 60)
+}
+
+/* Header ends */
+
+/* main starts */
+.main-container {
+  display: flex;
+  /* background: linear-gradient(to bottom right, rgba(250, 112, 154, 1), rgb(135, 206, 250, 1)); */
+  background-color: red;
+}
+/* main ends */
+
+/* footer starts */
+
+.footer-container {
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 100;
+
+  background-color: lightcoral;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgb(222, 222, 222);
+}
+
+.right-text {
+  display: flex;
+  align-items: center;
+}
+
+/* footer ends */

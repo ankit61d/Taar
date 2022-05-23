@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, make_response
+from flask import Flask, json, jsonify, render_template, request, make_response
 import jwt
 import datetime
 
@@ -7,6 +7,17 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
 
 api_url_prefix = "api"
+
+@app.route(f"/{api_url_prefix}/login", method='POST')
+def api_login():
+    print(request.data)
+    data = {"token":"<token>", "redirect_url": "/chat"}
+    response = app.response_class(
+        response=json.dumps(data),
+        status=200,
+        mimetype='application/json')
+    return response
+
 
 # changes here
 @app.route(f"/")

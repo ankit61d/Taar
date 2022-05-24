@@ -1,5 +1,5 @@
 from flask import Flask, json, jsonify, render_template, request, make_response
-import jwt
+# import jwt
 import datetime
 
 app = Flask(__name__)
@@ -8,7 +8,9 @@ app.config['SECRET_KEY'] = 'secret_key'
 
 api_url_prefix = "api"
 
-@app.route(f"/{api_url_prefix}/login", method='POST')
+# dummy json route
+
+@app.route(f"/{api_url_prefix}/login", methods=['POST'])
 def api_login():
     print(request.data)
     data = {"token":"<token>", "redirect_url": "/chat"}
@@ -19,7 +21,7 @@ def api_login():
     return response
 
 
-# changes here
+# sample routes 
 @app.route(f"/")
 def home():
     return render_template("home.html")
@@ -35,7 +37,7 @@ def register():
 @app.route(f"/chat")
 def chat():
     return render_template("chat.html")
-# changes end
+# sample routes end
 
 
 

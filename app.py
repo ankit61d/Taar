@@ -1,6 +1,6 @@
 from flask import Flask, json, jsonify, render_template, request, make_response
 # import jwt
-import datetime
+# from datetime import datetime
 
 app = Flask(__name__)
 
@@ -60,7 +60,6 @@ def register():
 def chat():
     return render_template("chat.html")
 # sample routes end
-
 
 
 

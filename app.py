@@ -4,7 +4,7 @@ import datetime
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'secret_key'
+app.config['SECRET_KEY'] = 'f7976f8bb0b1cvcec676dfde280ba245'
 
 api_url_prefix = "api"
 

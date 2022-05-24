@@ -1,5 +1,5 @@
 from flask import Flask, json, jsonify, render_template, request, make_response
-# import jwt
+import jwt
 # from datetime import datetime
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ def api_login():
 
 @app.route(f"/{api_url_prefix}/register", methods=['POST'])
 def api_register():
-    print(request.data)
+    print(request.json)
     data = {"message": "User registered"}
     response = app.response_class(
         response=json.dumps(data),

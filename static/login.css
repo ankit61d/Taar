@@ -39,7 +39,7 @@ body,
   flex-direction: row;
   justify-content: space-between;
 
-  position: fixed;
+  position: relative;
   top: 0px;
   right: 0px;
   left: 0px;

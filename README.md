@@ -11,3 +11,4 @@ Inside virtual env, install these packages:
 1. install flask >> pip install flask
 2. install PyJWT >> pip install pyjwt
 3. install Flask-SQLAlchemy >> pip install Flask-SQLAlchemy
+4. install Flask Bcrypt >> pip install flask-bcrypt

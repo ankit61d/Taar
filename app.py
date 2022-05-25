@@ -1,18 +1,37 @@
 from flask import Flask, json, jsonify, render_template, request, make_response
 import jwt
-# from datetime import datetime
-
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(20), nullable=False)
+    phone_number = db.Column(db.Integer(), unique=True, nullable=False)
+    password = db.Column(db.String(20), nullable=False)
+    def __repr__(self) -> str:
+        return f"User('{self.id}', '{self.full_name}', '{self.phone_number}')"
+
+
+
 
 app.config['SECRET_KEY'] = 'f7976f8bb0b1cvcec676dfde280ba245'
 
 api_url_prefix = "api"
+
+bcrypt = Bcrypt()
 
 # dummy json route
 
 @app.route(f"/{api_url_prefix}/login", methods=['POST'])
 def api_login():
     print(request.data)
+    
+
     data = {"token":"<token>", "redirect_url": "/chat"}
     response = app.response_class(
         response=json.dumps(data),
@@ -24,6 +43,11 @@ def api_login():
 def api_register():
     print(request.json)
     data = {"message": "User registered"}
+    payload_data = request.json
+    user = User(full_name=payload_data['full_name'],
+                    phone_number=payload_data['phone_number'], password=payload_data['password'])
+    db.session.add(user)
+    db.session.commit()
     response = app.response_class(
         response=json.dumps(data),
         status=200,

@@ -58,7 +58,7 @@ def verify_token(token):
 error_messages = {
                     'password_error' : 'Password incorrect. Please Try again',
                     'user_error' : 'User Not found. Please Register'
-                    }
+                }
 # {"error_message":error_message['user_error']}
 
 @app.route(f"/{api_url_prefix}/login", methods=['POST'])
@@ -81,9 +81,9 @@ def api_login():
         return response
     else:
         if user: # we here so password not correct
-            return make_response(error_messages['password_error'], 400, {'Content-Type': 'application/json'})
+            return make_response({'error_message':error_messages["user_error"]}, 400, {'Content-Type': 'application/json'})
         else: # when user doesnot exist
-           return make_response(error_messages['user_error'], 400, {'Content-Type': 'application/json'})   
+           return make_response({'error_message': error_messages["user_error"]}, 400, {'Content-Type': 'application/json'})   
 
 @app.route(f"/{api_url_prefix}/register", methods=['POST'])
 def api_register():
@@ -134,15 +134,29 @@ def api_add_friend():
         mimetype='application/json')
     return response
 
-'''
+
 @app.route(f"/{api_url_prefix}/friends/view-requests", methods=['GET'])
 def api_view_friend_requests():
-    viewer_id = verify_token(request.headers['token'])
+    viewer_id = verify_token(request.headers['UserToken'])
     print(viewer_id)
 # now respond with all request to this user from friends table
+    incoming_requests = Friend.query.filter_by(user2=viewer_id).all()
+#incoming requests is an iterable with element_type = Friend('1', '3', '4', '1')
+    print(incoming_requests)
+    requests = []
+    for each in incoming_requests:
+        sender_name = User.query.filter_by(id=each.user1).first().full_name
+        friend_request_id = each.id
+        requests.append({'name':sender_name, 'friend_request_id':friend_request_id})
+    response_data = {'requests':requests}
+    response = app.response_class(
+        response=json.dumps(response_data),
+        status=200,
+        mimetype='application/json')
+    return response
 
 
-'''
+
 @app.route(f"/{api_url_prefix}/friends/respond-to-requests", methods=['POST'])
 def api_respond_to_requests():
     pass

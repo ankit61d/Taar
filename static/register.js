@@ -4,67 +4,81 @@ const passwordInput = document.getElementById('password');
 const registerBtn = document.getElementById('register-btn');
 
 
-// Checking Cookie
-
-// window.onload = (event) => {
-//   console.log('page is fully loaded');
-
-//   function getCookie(cookiename) {
-//     let token = cookiename + "=";
-//     let cookiearray = document.cookie.split(';');
-//     for (let i=0; i<cookiearray.length; i++) {
-//       let cookies = cookiearray[i];
-//       while (cookies.charAt(0) == ' ') {
-//         cookies = cookies.substring(1);
-//       }
-//       if (cookies.indexOf(token) == 0) {
-//         return cookies.substring(phoneNumber.length, cookies.length);
-//       }
-//     }
-//     return "";
-//   }
-// };
+window.onload = (event) => {
+  console.log('page is fully loaded');
+  checkCookie();
+};
 
 
-
-
-
-// tyring new things
-registerBtn.addEventListener('click', function() {
-  let fullName = fullNameInput.value;
-  let phoneNumber = phoneNumberInput.value;
-  let password = passwordInput.value;
-
-
-  if (fullName != '' && phoneNumber != '' && password != '') {
-    
-    const inputObject = {
-      full_name: fullName,
-      phone_number: phoneNumber,
-      password: password,
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
     }
-
-    async function postRegisterData() {
-      const response = await fetch('http://127.0.0.1:5000/api/register', {
-        method: 'POST',
-        body: JSON.stringify(inputObject),
-        headers: {
-          'Content-Type' : 'application/json'
-        }
-      });
-  
-      const responseText = await response.text();
-      const toRedirect = confirm(responseText);
-      if (toRedirect) {
-        window.location.href='http://127.0.0.1:5000/login';
-      }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
     }
-    postRegisterData();
+  }
+  return "";
+}
+
+
+// trying 3rd thing 
+function checkCookie() {
+  let user = getCookie("UserToken");
+  if (user != "") {
+    const toRedirect = confirm("Welcome again you are already logged in!");
+    if (toRedirect) {
+      window.location.href='http://127.0.0.1:5000/chat';
+    }
   } 
   else {
-    alert("Please Check the input fields.");
+    registerBtnClickEvent();
   }
-})
+}
+// trying 3rd thing ends here
+
+
+function registerBtnClickEvent() {
+  registerBtn.addEventListener('click', function() {
+    let fullName = fullNameInput.value;
+    let phoneNumber = phoneNumberInput.value;
+    let password = passwordInput.value;
+  
+  
+    if (fullName != '' && phoneNumber != '' && password != '') {
+      
+      const inputObject = {
+        full_name: fullName,
+        phone_number: phoneNumber,
+        password: password,
+      }
+  
+      async function postRegisterData() {
+        const response = await fetch('http://127.0.0.1:5000/api/register', {
+          method: 'POST',
+          body: JSON.stringify(inputObject),
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        });
+    
+        const responseText = await response.text();
+        const toRedirect = confirm(responseText);
+        if (toRedirect) {
+          window.location.href='http://127.0.0.1:5000/login';
+        }
+      }
+      postRegisterData();
+    } 
+    else {
+      alert("Please Check the input fields.");
+    }
+  })
+}
 
 
 
@@ -80,6 +94,87 @@ registerBtn.addEventListener('click', function() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// tyring 2nd things
+// registerBtn.addEventListener('click', function() {
+//   let fullName = fullNameInput.value;
+//   let phoneNumber = phoneNumberInput.value;
+//   let password = passwordInput.value;
+
+
+//   if (fullName != '' && phoneNumber != '' && password != '') {
+    
+//     const inputObject = {
+//       full_name: fullName,
+//       phone_number: phoneNumber,
+//       password: password,
+//     }
+
+//     async function postRegisterData() {
+//       const response = await fetch('http://127.0.0.1:5000/api/register', {
+//         method: 'POST',
+//         body: JSON.stringify(inputObject),
+//         headers: {
+//           'Content-Type' : 'application/json'
+//         }
+//       });
+  
+//       const responseText = await response.text();
+//       const toRedirect = confirm(responseText);
+//       if (toRedirect) {
+//         window.location.href='http://127.0.0.1:5000/login';
+//       }
+//     }
+//     postRegisterData();
+//   } 
+//   else {
+//     alert("Please Check the input fields.");
+//   }
+// })
+// trying 2nd thing ends here
+
+// .
+// .
 
 // 1st try starts
 

@@ -159,7 +159,19 @@ def api_view_friend_requests():
 
 @app.route(f"/{api_url_prefix}/friends/respond-to-requests", methods=['POST'])
 def api_respond_to_requests():
-    pass
+    viewer_id = verify_token(request.headers['UserToken'])
+    payload_data = request.json
+    response_data = {'message': 'Success'}
+    friend_request = Friend.query.filter_by(id=payload_data['friend_request_id']).first()
+    # do i verify the validity of request by matching the viewer_id and user2 in the friend_request_id
+    friend_request.status = payload_data['status']
+    db.session.commit()
+    response = app.response_class(
+        response=json.dumps(response_data),
+        status=200,
+        mimetype='application/json')
+    return response
+
 
 
 

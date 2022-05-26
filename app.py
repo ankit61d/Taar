@@ -161,6 +161,14 @@ def register():
 @app.route(f"/chat")
 def chat():
     return render_template("chat.html")
+
+@app.route(f"/add-friend")
+def chat():
+    return render_template("addFriends.html")
+
+@app.route(f"/view-request")
+def chat():
+    return render_template("friendRequests.html")
 # sample routes end
 
 

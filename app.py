@@ -165,13 +165,13 @@ def register():
 @app.route(f"/chat")
 def chat():
     return render_template("chat.html")
-
-@app.route(f"/addFriends")
-def addFriends():
+# need change names for below 2 routes
+@app.route(f"/friends/add")
+def add_friend():
     return render_template("addFriends.html")
 
-@app.route(f"/friendRequests")
-def friendRequests():
+@app.route(f"/friends/view-requests")
+def view_friend_requests():
     return render_template("friendRequests.html")
 # sample routes end
 

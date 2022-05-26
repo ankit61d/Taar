@@ -140,12 +140,16 @@ def api_view_friend_requests():
     viewer_id = verify_token(request.headers['token'])
     print(viewer_id)
 # now respond with all request to this user from friends table
+
+
 '''
+@app.route(f"/{api_url_prefix}/friends/respond-to-requests", methods=['POST'])
+def api_respond_to_requests():
+    pass
 
 
 
-
-# sample routes 
+# sample routes
 @app.route(f"/")
 def home():
     return render_template("home.html")
@@ -162,12 +166,12 @@ def register():
 def chat():
     return render_template("chat.html")
 
-@app.route(f"/add-friend")
-def chat():
+@app.route(f"/addFriends")
+def addFriends():
     return render_template("addFriends.html")
 
-@app.route(f"/view-request")
-def chat():
+@app.route(f"/friendRequests")
+def friendRequests():
     return render_template("friendRequests.html")
 # sample routes end
 

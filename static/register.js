@@ -72,8 +72,6 @@ function registerBtnClickEvent() {
         } else {
           alert("Some error occured please try again");
         }
-        
-        
       }
       postRegisterData();
     } 

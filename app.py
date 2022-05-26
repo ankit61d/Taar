@@ -101,19 +101,6 @@ def api_register():
         mimetype='application/json')
     return response
 
-@app.route(f"/{api_url_prefix}/friends", methods=['GET'])
-def api_friends():
-    print(request.json)
-    data = {
-        "friends":[ {"name": "<name>", "userId": "userId1"},
-                    {"name": "<name>", "userId": "userId2"},]
-        }
-    response = app.response_class(
-        response=json.dumps(data),
-        status=200,
-        mimetype='application/json')
-    return response
-
 @app.route(f"/{api_url_prefix}/friends/add", methods=['POST'])
 def api_add_friend():
     response_data = {"message":"friend request sent"}
@@ -172,7 +159,25 @@ def api_respond_to_requests():
         mimetype='application/json')
     return response
 
-
+@app.route(f"/{api_url_prefix}/friends", methods=['GET'])
+def api_friends():
+    viewer_id = verify_token(request.headers['UserToken'])
+    # need to search friend table twice, once as user1 then as user2
+    # friends_requested are all entries with this user as user1
+    friends_requested = Friend.query.filter_by(user1=viewer_id,status=2).all()
+    friends_added = Friend.query.filter_by(user2=viewer_id,status=2).all()
+    all_friends = []
+    for each in friends_requested:
+        friend = User.query.filter_by(id=each.user2).first()
+        all_friends.append({"name":friend.full_name, "userId":friend.id})
+    for each in friends_added:
+        friend = User.query.filter_by(id=each.user1).first()
+        all_friends.append({"name":friend.full_name, "userId":friend.id})
+    response = app.response_class(
+        response=json.dumps(all_friends),
+        status=200,
+        mimetype='application/json')
+    return response
 
 
 # sample routes

@@ -30,10 +30,8 @@ function getCookie(cname) {
 function checkCookie() {
   let user = getCookie("UserToken");
   if (user != "") {
-    const toRedirect = confirm("Welcome again you are already logged in!");
-    if (toRedirect) {
-      window.location.href='http://127.0.0.1:5000/chat';
-    }
+    alert("Welcome again you are already logged in!");
+    window.location.href='http://127.0.0.1:5000/chat';
   } 
   else {
     registerBtnClickEvent();
@@ -67,10 +65,15 @@ function registerBtnClickEvent() {
         });
     
         const responseText = await response.text();
-        const toRedirect = confirm(responseText);
-        if (toRedirect) {
+        console.log(responseText);
+        if (response.status == 200) {
+          alert("You are registered please login");
           window.location.href='http://127.0.0.1:5000/login';
+        } else {
+          alert("Some error occured please try again");
         }
+        
+        
       }
       postRegisterData();
     } 

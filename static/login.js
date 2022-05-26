@@ -37,10 +37,8 @@ function getCookie(cname) {
 function checkCookie() {
   let user = getCookie("UserToken");
   if (user != "") {
-    const toRedirect = confirm("Welcome again you are already logged in!");
-    if (toRedirect) {
-      window.location.href='http://127.0.0.1:5000/chat';
-    }
+    alert("Welcome again you are already logged in!");
+    window.location.href='http://127.0.0.1:5000/chat';
   } 
   else {
     loginBtnClickEvent();
@@ -70,11 +68,15 @@ function loginBtnClickEvent() {
         });
     
         const responseJson = await response.json();
-        setCookie("UserToken", responseJson.token, 7)
-        const toRedirect = confirm("Successfully logged in.");
-        if (toRedirect) {
+        if (response.status == 200) {
+          setCookie("UserToken", responseJson.token, 7)
+          alert("Successfully logged in.");
           window.location.href='http://127.0.0.1:5000/chat';
         }
+        else {
+          alert("Error: user dosen't exit or wrong password")
+        }
+
       }
       postLoginData();
     }

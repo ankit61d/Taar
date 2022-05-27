@@ -17,8 +17,8 @@ sendFriendRequestBtn.addEventListener('click', function() {
       method: 'POST',
       body: JSON.stringify(inputObject),
       headers: {
-        'Content-Type' : 'application/json',
-        'UserToken' : token,
+        'Content-Type': 'application/json',
+        'UserToken': token,
       }
     });
     const responseText = await response.text();

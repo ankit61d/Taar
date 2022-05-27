@@ -217,6 +217,7 @@ def api_send_message(userId1):
             if relation_status2.status in [2,'2']:
                 #this means they are friends
                 # commit message content to message table
+### PENDING >>  # need to add content check if content == None , do not commit
                 message = Message(sender=sender_id, receiver=userId1, content=payload_data['content'])
                 db.session.add(message)
                 db.session.commit()
@@ -256,6 +257,87 @@ def api_send_message(userId1):
             #this means sender_id rejected userId1's request
             #raise not_friend_error >> you rejected userId1's friend request
             return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+
+
+@app.route(f"/{api_url_prefix}/messages/<int:userId1>", methods=['GET'])
+def api_get_all_message(userId1):
+    viewer_id = verify_token(request.headers['UserToken'])
+    #print(sender_id)
+    #print(type(sender_id))
+    #userId1 is the receiver, now we check if they are friends in the friend table
+    response_data = {}
+    relation_status1 = Friend.query.filter_by(user1=viewer_id,user2=userId1).first()
+    if relation_status1 is None:
+        relation_status2 = Friend.query.filter_by(user1=userId1,user2=viewer_id).first()
+        if relation_status2 is None:
+            # this means there is no entry in friends table
+            # raise not_friend-error >> send friend request first
+            return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+        else:
+            # they have entry in Friend table, lets check status
+            if relation_status2.status in [2,'2']:
+                #this means they are friends
+                # commit message content to message table
+                messages1 = Message.query.filter_by(sender=viewer_id, receiver=userId1).all()
+                messages2 = Message.query.filter_by(sender=userId1, receiver=viewer_id).all()
+                chat_history = []
+                for each in messages1:
+                    chat_history.append((each.id, {"sender":"self", "content":each.content} ))
+                for each in messages2:
+                    chat_history.append((each.id, {"sender":"friend", "content":each.content} ))
+
+                chat_history = sorted(chat_history, key=lambda x:x[0])
+                ordered_chat_history = []
+                response_data = {"messages":ordered_chat_history}
+                for i, each in enumerate(chat_history):
+                    ordered_chat_history.append(chat_history[i][1])
+                response = app.response_class(
+                    response=json.dumps(response_data),
+                    status=200,
+                    mimetype='application/json')
+                return response
+            elif relation_status2.status in [1,'1']:
+                #this means that sender_id is yet to accept
+                #raise not_friend_error >> you have to accept friend request first
+                return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+
+            else: # i.e. relation_status2.status in [3,'3']
+                #this means sender_id rejected userId1's request
+                #raise not_friend_error >> you rejected userId1's friend request
+                return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+    else:
+        # they have entry in Friend table, lets check status now
+        if relation_status1.status in [2,'2']:
+            #this means they are friends
+            messages1 = Message.query.filter_by(sender=viewer_id, receiver=userId1).all()
+            messages2 = Message.query.filter_by(sender=userId1, receiver=viewer_id).all()
+            chat_history = []
+            for each in messages1:
+                chat_history.append((each.id, {"sender":"self", "content":each.content} ))
+            for each in messages2:
+                chat_history.append((each.id, {"sender":"friend", "content":each.content} ))
+
+            chat_history = sorted(chat_history, key=lambda x:x[0])
+            ordered_chat_history = []
+            response_data = {"messages":ordered_chat_history}
+            for i, each in enumerate(chat_history):
+                ordered_chat_history.append(chat_history[i][1])
+            response = app.response_class(
+                response=json.dumps(response_data),
+                status=200,
+                mimetype='application/json')
+            return response
+        elif relation_status2.status in [1,'1']:
+            #this means that sender_id is yet to accept
+            #raise not_friend_error >> you have to accept friend request first
+            return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+
+        else: # i.e. relation_status2.status in [3,'3']
+            #this means sender_id rejected userId1's request
+            #raise not_friend_error >> you rejected userId1's friend request
+            return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+
+
 # static routes
 @app.route(f"/")
 def home():

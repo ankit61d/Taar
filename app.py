@@ -57,7 +57,8 @@ def verify_token(token):
 
 error_messages = {
                     'password_error' : 'Password incorrect. Please Try again',
-                    'user_error' : 'User Not found. Please Register'
+                    'user_error' : 'User Not found. Please Register',
+                    'some_error' : 'Something wasn\'t right. Please Try again'
                 }
 # {"error_message":error_message['user_error']}
 
@@ -81,7 +82,7 @@ def api_login():
         return response
     else:
         if user: # we here so password not correct
-            return make_response({'error_message':error_messages["user_error"]}, 400, {'Content-Type': 'application/json'})
+            return make_response({'error_message':error_messages["password_error"]}, 400, {'Content-Type': 'application/json'})
         else: # when user doesnot exist
            return make_response({'error_message': error_messages["user_error"]}, 400, {'Content-Type': 'application/json'})   
 
@@ -127,7 +128,7 @@ def api_view_friend_requests():
     viewer_id = verify_token(request.headers['UserToken'])
     print(viewer_id)
 # now respond with all request to this user from friends table
-    incoming_requests = Friend.query.filter_by(user2=viewer_id).all()
+    incoming_requests = Friend.query.filter_by(user2=viewer_id, status=1).all()
 #incoming requests is an iterable with element_type = Friend('1', '3', '4', '1')
     print(incoming_requests)
     requests = []
@@ -150,14 +151,19 @@ def api_respond_to_requests():
     payload_data = request.json
     response_data = {'message': 'Success'}
     friend_request = Friend.query.filter_by(id=payload_data['friend_request_id']).first()
-    # do i verify the validity of request by matching the viewer_id and user2 in the friend_request_id
-    friend_request.status = payload_data['status']
-    db.session.commit()
-    response = app.response_class(
-        response=json.dumps(response_data),
-        status=200,
-        mimetype='application/json')
-    return response
+    # Verifying the validity of request by matching the viewer_id and user2 in the friend_request_id
+    # i.e. if the viewer actually received such a request for which response request is generated
+    # another validation check is that the 'status' in payload_data must be 1 or 2 or 3
+    if viewer_id == friend_request.user2 and payload_data['status'] in [1,2,3,'1','2','3']:
+        friend_request.status = int(payload_data['status'])
+        db.session.commit()
+        response = app.response_class(
+            response=json.dumps(response_data),
+            status=200,
+            mimetype='application/json')
+        return response
+    else:
+        return make_response({'error_message':error_messages["some_error"]}, 400, {'Content-Type': 'application/json'})
 
 @app.route(f"/{api_url_prefix}/friends", methods=['GET'])
 def api_friends():

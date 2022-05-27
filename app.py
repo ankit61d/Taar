@@ -240,7 +240,7 @@ def api_send_message(userId1):
         if relation_status1.status in [2,'2']:
             #this means they are friends
             # commit message content to message table
-            message = Message(sender_id=sender_id, receiver_id=userId1)
+            message = Message(sender=sender_id, receiver=userId1, content=payload_data['content'])
             db.session.add(message)
             db.session.commit()
             response = app.response_class(

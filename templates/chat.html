@@ -7,10 +7,23 @@
   <title>taar chat</title>
 </head>
 <body>
-  <input type=button onClick="location.href='http://127.0.0.1:5000/friends/add'"
- value='Add Friend'>
- <input type=button onClick="location.href='http://127.0.0.1:5000/friends/view-requests'"
- value='Friend Requests'>
+
+  <section class="section">
+    <div class="button-wrapper">
+      <input type=button onClick="location.href='http://127.0.0.1:5000/friends/add'"
+      value='Add Friend'>
+      <input type=button onClick="location.href='http://127.0.0.1:5000/friends/view-requests'"
+      value='Friend Requests'>
+    </div>
+    <div class="friend-chat-wrapper">
+      <div id="friends-container">
+        <h3>Select friend to see chat</h3>
+        <div id="friends"></div>
+      </div>
+      <div id="msg-container"></div>
+    </div>
+  </section>
+
 </body>
 <script src="../static/chat.js"></script>
 </html>

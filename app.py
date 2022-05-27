@@ -35,6 +35,15 @@ class Friend(db.Model):
     def __repr__(self):
         return f"Friend('{self.id}', '{self.user1}', '{self.user2}', '{self.status}')"
 
+# messages table
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sender = db.Column(db.Integer, nullable=False)
+    receiver = db.Column(db.Integer, nullable=False)
+    content = db.Column(db.String(1000), nullable=False)
+    def __repr__(self):
+        return f"Message('{self.id}', '{self.sender}', '{self.receiver}', '{self.content}')"
+
 # generate jwt token
 def generate_token(user_id):
     try:
@@ -58,7 +67,8 @@ def verify_token(token):
 error_messages = {
                     'password_error' : 'Password incorrect. Please Try again',
                     'user_error' : 'User Not found. Please Register',
-                    'some_error' : 'Something wasn\'t right. Please Try again'
+                    'some_error' : 'Something wasn\'t right. Please Try again',
+                    'not_friend_error' : 'Kindly add friend first.'
                 }
 # {"error_message":error_message['user_error']}
 
@@ -185,8 +195,68 @@ def api_friends():
         mimetype='application/json')
     return response
 
+####### MESSAGES API ####### 
 
-# sample routes
+@app.route(f"/{api_url_prefix}/messages/<int:userId1>", methods=['POST'])
+def api_send_message(userId1):
+    sender_id = verify_token(request.headers['UserToken'])
+    #print(sender_id)
+    #print(type(sender_id))
+    #userId1 is the receiver, now we check if they are friends in the friend table
+    response_data = {"status":"success"}
+    payload_data = request.json
+    relation_status1 = Friend.query.filter_by(user1=sender_id,user2=userId1).first()
+    if relation_status1 is None:
+        relation_status2 = Friend.query.filter_by(user1=userId1,user2=sender_id).first()
+        if relation_status2 is None:
+            # this means there is no entry in friends table
+            # raise not_friend-error >> send friend request first
+            return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+        else:
+            # they have entry in Friend table, lets check status
+            if relation_status2.status in [2,'2']:
+                #this means they are friends
+                # commit message content to message table
+                message = Message(sender=sender_id, receiver=userId1, content=payload_data['content'])
+                db.session.add(message)
+                db.session.commit()
+                response = app.response_class(
+                    response=json.dumps(response_data),
+                    status=200,
+                    mimetype='application/json')
+                return response
+            elif relation_status2.status in [1,'1']:
+                #this means that sender_id is yet to accept
+                #raise not_friend_error >> you have to accept friend request first
+                return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+
+            else: # i.e. relation_status2.status in [3,'3']
+                #this means sender_id rejected userId1's request
+                #raise not_friend_error >> you rejected userId1's friend request
+                return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+    else:
+        # they have entry in Friend table, lets check status now
+        if relation_status1.status in [2,'2']:
+            #this means they are friends
+            # commit message content to message table
+            message = Message(sender_id=sender_id, receiver_id=userId1)
+            db.session.add(message)
+            db.session.commit()
+            response = app.response_class(
+                response=json.dumps(response_data),
+                status=200,
+                mimetype='application/json')
+            return response
+        elif relation_status2.status in [1,'1']:
+            #this means that sender_id is yet to accept
+            #raise not_friend_error >> you have to accept friend request first
+            return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+
+        else: # i.e. relation_status2.status in [3,'3']
+            #this means sender_id rejected userId1's request
+            #raise not_friend_error >> you rejected userId1's friend request
+            return make_response({'error_message':error_messages["not_friend_error"]}, 400, {'Content-Type': 'application/json'})
+# static routes
 @app.route(f"/")
 def home():
     return render_template("home.html")
